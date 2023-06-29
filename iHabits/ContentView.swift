@@ -5,17 +5,24 @@
 //  Created by Caique Ribeiro on 09/06/23.
 //
 
+import Inject
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var viewModel: AuthenticationViewModel
+    @ObservedObject private var iO = Inject.observer
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+            if viewModel.loading {
+                ProgressView()
+            } else {
+                switch viewModel.state {
+                    case .signedIn: HomeView()
+                    case .signedOut: LoginView()
+                }
+            }
+        }.enableInjection()
     }
 }
 
